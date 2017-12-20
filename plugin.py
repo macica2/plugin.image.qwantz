@@ -1,3 +1,6 @@
+# Copyright (C) 2017- Maxx Macica <maxxmacica@gmail.com>
+# This program is free software. See the LICENSE.txt file for more information.
+
 import sys
 from bs4 import BeautifulSoup
 import os
@@ -50,15 +53,17 @@ def add_comic_item(url, includePrevAndNext):
         li.setProperty('description', altText)
         xbmc.log('setting img with addon_handle ' + str(addon_handle))
         xbmcplugin.addDirectoryItem(handle=addon_handle, url=imgSrc, listitem=li)
+        
+        if includePrevAndNext:
+            add_arrow_item(soup, 'Previous comic', PREV_FOLDER_NAME, 'leftarrow.png')
+            add_arrow_item(soup, 'Next comic', NEXT_FOLDER_NAME, 'rightarrow.png')
     except Exception:
         xbmc.log(format_exc())
     
-    if includePrevAndNext:
-        add_arrow_item(soup, 'Previous comic', PREV_FOLDER_NAME, 'leftarrow.png')
-        add_arrow_item(soup, 'Next comic', NEXT_FOLDER_NAME, 'rightarrow.png')
+    
             
 def add_arrow_item(soup, titleText, folderName, iconName):
-    """ Adds the previous or next arrow button for the comic 
+    """ Adds the previous or next arrow button for the comic.
         The first comic won't have a previous arrow,
         and the most recent comic won't have a next arrow.
     """
