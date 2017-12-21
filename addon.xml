@@ -13,10 +13,7 @@
 		<description lang="en">Dinosaur Comics is a humorous comic about talking dinosaurs. It was created by Ryan North and can be viewed freely at www.qwantz.com.</description>
 		<license>GNU General Public License, v2</license>
 		<language></language>
-		<forum>http://example.com/TODO</forum>
-		<source>http://example.com/TODO</source>
-		<website>Kodi.tv</website>
-		<email>maxxmacica@gmail.com</email>
+		<source>https://github.com/macica2/plugin.image.qwantz</source>
 		<assets>
 			<icon>resources/icon.png</icon>
 			<fanart>resources/fanart.jpg</fanart>

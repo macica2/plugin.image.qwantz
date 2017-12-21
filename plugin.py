@@ -47,7 +47,6 @@ def add_comic_item(url, includePrevAndNext):
         img = soup.find_all('img', { 'class': 'comic' })[0]
         imgSrc = img['src']
         altText = img['title']
-        #nextBtns = soup.find_all('a', { 'title' : 'Next comic' })
         
         li = xbmcgui.ListItem(date, iconImage='DefaultPicture.png')
         li.setProperty('description', altText)
@@ -68,18 +67,19 @@ def add_arrow_item(soup, titleText, folderName, iconName):
         and the most recent comic won't have a next arrow.
     """
     try:
+        xbmc.log('Getting arrows')
         btns = soup.find_all('a', { 'title': titleText })
         if btns:
             href = btns[0]['href'] # contains link to comic, e.g. http://www.qwantz.com/index.php?comic=3184
-            #xbmc.log('prev href = ' + prevHref)
+            xbmc.log('href = ' + href)
             iconPath = os.path.join(xbmcaddon.Addon().getAddonInfo('path'), 'resources', iconName)
-            #xbmc.log('iconPath is ' + iconPath)
+            xbmc.log('iconPath is ' + iconPath)
             item = xbmcgui.ListItem(folderName, iconImage=iconPath, thumbnailImage=iconPath)
             url = build_url({'mode': 'folder', 'foldername': folderName, 'imgUrl': href})
-            #.log('setting arrow with addon_handle ' + str(addon_handle))
+            xbmc.log('setting arrow with addon_handle ' + str(addon_handle))
             xbmcplugin.addDirectoryItem(handle=addon_handle, url=url, listitem=item, isFolder=True)
         else:
-            xbmc.log('no prev btn found')
+            xbmc.log('no ' + titleText + ' btn found')
     except Exception:
         xbmc.log(format_exc())
 
@@ -133,31 +133,31 @@ if mode is None:
 	
 elif mode[0] == 'folder':
     foldername = args['foldername'][0]
-    #xbmc.log('foldername is ' + foldername)
+    xbmc.log('foldername is ' + foldername)
     if (foldername == BROWSE_FOLDER_NAME):
         browse_by_id(int(args['latestComicId'][0]))
     elif (foldername == BROWSE_RANGE_FOLDER_NAME):
         startId = int(args['startId'][0])
         endId = int(args['endId'][0])
         latestComicId = int(args['latestComicId'][0])
-        #xbmc.log('start is ' + str(startId) + ' end is ' + str(endId) + ' latest is ' + str(latestComicId))
+        xbmc.log('start is ' + str(startId) + ' end is ' + str(endId) + ' latest is ' + str(latestComicId))
         for i in range(startId, endId + 1):
             if (i <= latestComicId):
                 add_comic_item("http://www.qwantz.com/index.php?comic=" + str(i), False)
         xbmcplugin.endOfDirectory(addon_handle)
     else:
         if (foldername == LATEST_FOLDER_NAME):
-            #xbmc.log('displaying latest comic')
+            xbmc.log('displaying latest comic')
             url = 'http://www.qwantz.com'
         elif (foldername == RANDOM_FOLDER_NAME):
-            #xbmc.log('displaying random comic')
+            xbmc.log('displaying random comic')
             latestComicId = int(args['latestComicId'][0])
-            #xbmc.log('latest comic id in rand is ' + str(latestComicId))
+            xbmc.log('latest comic id in rand is ' + str(latestComicId))
             randId = random.randint(1,latestComicId)
-            #xbmc.log('rand comic id is ' + str(randId))
+            xbmc.log('rand comic id is ' + str(randId))
             url = 'http://www.qwantz.com/index.php?comic=' + str(randId)
         elif foldername == PREV_FOLDER_NAME or foldername == NEXT_FOLDER_NAME:
-            #xbmc.log('displaying prev/next comic')
+            xbmc.log('displaying prev/next comic')
             url = args['imgUrl'][0]
         add_comic_item(url, True)
         xbmcplugin.endOfDirectory(addon_handle)
