@@ -50,7 +50,8 @@ def add_comic_item(url, includePrevAndNext):
         imgSrc = QWANTZ_URL + img['src']
         altText = img['title']
         
-        li = xbmcgui.ListItem(date, iconImage='DefaultPicture.png')
+        li = xbmcgui.ListItem(date)
+        li.setArt({ 'icon': 'DefaultPicture.png' })
         li.setProperty('description', altText)
         xbmc.log('setting img with addon_handle ' + str(addon_handle))
         xbmcplugin.addDirectoryItem(handle=addon_handle, url=imgSrc, listitem=li)
@@ -74,9 +75,10 @@ def add_arrow_item(soup, titleText, folderName, iconName):
         if btns:
             href = QWANTZ_URL + btns[0]['href'] # contains link to comic, e.g. http://www.qwantz.com/index.php?comic=3184
             xbmc.log('href = ' + href)
-            iconPath = os.path.join(xbmcaddon.Addon().getAddonInfo('path'), 'resources', iconName)
+            iconPath = os.path.join(ADDON.getAddonInfo('path'), 'resources', iconName)
             xbmc.log('iconPath is ' + iconPath)
-            item = xbmcgui.ListItem(folderName, iconImage=iconPath, thumbnailImage=iconPath)
+            item = xbmcgui.ListItem(folderName)
+            item.setArt({ 'thumb': iconPath, 'icon': iconPath })
             url = build_url({'mode': 'folder', 'foldername': folderName, 'imgUrl': href})
             xbmc.log('setting arrow with addon_handle ' + str(addon_handle))
             xbmcplugin.addDirectoryItem(handle=addon_handle, url=url, listitem=item, isFolder=True)
@@ -108,9 +110,10 @@ def build_initial_folders(latestComicId):
     
 def build_initial_folder(folderName, latestComicId, iconName):
     """ Builds a single folder that the user sees when first opening the add-on """
-    iconPath = os.path.join(xbmcaddon.Addon().getAddonInfo('path'), 'resources', iconName)
+    iconPath = os.path.join(ADDON.getAddonInfo('path'), 'resources', iconName)
     url = build_url({'mode': 'folder', 'foldername': folderName, 'latestComicId': latestComicId})
-    li = xbmcgui.ListItem(folderName, iconImage=iconPath, thumbnailImage=iconPath)
+    li = xbmcgui.ListItem(folderName)
+    li.setArt({ 'thumb': iconPath, 'icon': iconPath})
     xbmcplugin.addDirectoryItem(handle=addon_handle, url=url, listitem=li, isFolder=True)
 
 # Main code
@@ -132,7 +135,6 @@ if mode is None:
     latestComicId = get_latest_comic_id()   
     build_initial_folders(latestComicId)
     xbmcplugin.endOfDirectory(addon_handle)
-	
 elif mode[0] == 'folder':
     foldername = args['foldername'][0]
     xbmc.log('foldername is ' + foldername)
